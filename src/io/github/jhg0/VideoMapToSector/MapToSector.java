@@ -1,6 +1,7 @@
 package io.github.jhg0.VideoMapToSector;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
@@ -9,13 +10,37 @@ import java.util.ArrayList;
 public class MapToSector
 {
 
-    private static ArrayList<String> lines = new ArrayList<>();
+    private ArrayList<String> lines = new ArrayList<>();
 
-    public static void main(String[] args)
+    private String latToDMS(double d)
     {
+        int deg = (int) d;
+        int q = deg > 0 ? 1 : -1;
+        int min = (int) ((d - deg) * 60);
+        int sec = (int) (((d - deg) * 60 - min) * 60);
+        int ext = (int) Math.floor((((((d - deg) * 60 - min) * 60) - sec) * 1000));
+        if(ext == 1000) ext--; else if(ext == -1000) ext++;
+        return (q == 1 ? "N" : "S") + String.format("%03d.", deg * q) + String.format("%02d.", min * q) + String.format("%02d.", sec * q) + String.format("%03d", ext * q);
+    }
+
+    private String lonToDMS(double d)
+    {
+        int deg = (int) d;
+        int q = deg > 0 ? 1 : -1;
+        int min = (int) ((d - deg) * 60);
+        int sec = (int) (((d - deg) * 60 - min) * 60);
+        int ext = (int) Math.floor((((((d - deg) * 60 - min) * 60) - sec) * 1000));
+        if(ext == 1000) ext--; else if(ext == -1000) ext++;
+        return (q == 1 ? "E" : "W") + String.format("%03d.", deg * q) + String.format("%02d.", min * q) + String.format("%02d.", sec * q) + String.format("%03d", ext * q);
+    }
+
+    public String convert(File fileIn, File fileOut)
+    {
+        long z = System.currentTimeMillis();
+        String name = "Sector Output";
         try
         {
-            BufferedReader in = new BufferedReader(new FileReader("C:\\Users\\Josh\\Downloads\\na.xml"));
+            BufferedReader in = new BufferedReader(new FileReader(fileIn));
             String s = in.readLine();
             while (s != null)
             {
@@ -23,14 +48,21 @@ public class MapToSector
                 s = in.readLine();
             }
             in.close();
-        } catch (Exception ignored)
+        } catch (Exception e)
         {
+            return "0 0";
         }
 
-
+        if (lines.size() >= 2)
+            if (lines.get(1).contains("LongName") && lines.get(1).split("LongName=\"").length > 1)
+                name = lines.get(1).split("LongName=\"")[1].split("\"")[0];
         try
         {
-            PrintWriter out = new PrintWriter(new FileWriter("C:\\Users\\Josh\\Downloads\\out.txt"));
+            PrintWriter out = new PrintWriter(new FileWriter(fileOut + File.separator + name + ".sct2"));
+            final String SPACE = "                          ";
+
+            if (name.length() > SPACE.length() - 1) name = name.substring(0, SPACE.length() - 1);
+            out.print(name + SPACE.substring(name.length()) + "N000.00.00.000 W000.00.00.000 E000.00.00.000 W000.00.00.000");
             for (String s : lines)
             {
                 String aa = "";
@@ -40,7 +72,6 @@ public class MapToSector
                 String[] q = s.split(" ");
                 for (String a : q)
                 {
-                    String SPACE = "                          ";
                     if (!aa.equals("") && !ba.equals("")) out.print("\n" + SPACE + aa + " " + ab + " " + ba + " " + bb);
                     if (a.contains("StartLat"))
                         aa = latToDMS(Double.parseDouble(a.split("=")[1].replace("\"", "")));
@@ -50,36 +81,13 @@ public class MapToSector
                         ba = latToDMS(Double.parseDouble(a.split("=")[1].replace("\"", "")));
                     else if (a.contains("EndLon"))
                         bb = lonToDMS(Double.parseDouble(a.split("=")[1].replace("\"", "")));
-
                 }
             }
             out.close();
-        } catch (Exception ignored)
+        } catch (Exception e)
         {
+            return "0 0";
         }
-    }
-
-    private static String latToDMS(double d)
-    {
-        String f;
-        int deg = (int) d;
-        int q = deg > 0 ? 1 : -1;
-        int min = (int) ((d - deg) * 60);
-        int sec = (int) (((d - deg) * 60 - min) * 60);
-        int ext = (int) Math.round((((((d - deg) * 60 - min) * 60) - sec) * 1000));
-        f = (q == 1 ? deg < 10 ? "N00" + deg : deg < 100 ? "N0" + deg : "N" + deg : deg > -10 ? "S00" + deg * -1 : deg > -100 ? "S0" + deg * -1 : "S" + deg * -1) + "." + (min * q < 10 ? "0" + min * q : min * q) + "." + (sec * q < 10 ? "0" + sec * q : sec * q) + "." + (ext * q < 10 ? "00" + ext * q : ext * q < 100 ? "0" + ext * q : ext * q);
-        return f;
-    }
-
-    private static String lonToDMS(double d)
-    {
-        String f;
-        int deg = (int) d;
-        int q = deg > 0 ? 1 : -1;
-        int min = (int) ((d - deg) * 60);
-        int sec = (int) (((d - deg) * 60 - min) * 60);
-        int ext = (int) Math.round((((((d - deg) * 60 - min) * 60) - sec) * 1000));
-        f = (q == 1 ? deg < 10 ? "E00" + deg : deg < 100 ? "E0" + deg : "E" + deg : deg > -10 ? "W00" + deg * -1 : deg > -100 ? "W0" + deg * -1 : "W" + deg * -1) + "." + (min * q < 10 ? "0" + min * q : min * q) + "." + (sec * q < 10 ? "0" + sec * q : sec * q) + "." + (ext * q < 10 ? "00" + ext * q : ext * q < 100 ? "0" + ext * q : ext * q);
-        return f;
+        return lines.size() + " " + (System.currentTimeMillis() - z);
     }
 }
