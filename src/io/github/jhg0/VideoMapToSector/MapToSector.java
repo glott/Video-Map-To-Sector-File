@@ -19,7 +19,8 @@ public class MapToSector
         int min = (int) ((d - deg) * 60);
         int sec = (int) (((d - deg) * 60 - min) * 60);
         int ext = (int) Math.floor((((((d - deg) * 60 - min) * 60) - sec) * 1000));
-        if(ext == 1000) ext--; else if(ext == -1000) ext++;
+        if (ext == 1000) ext--;
+        else if (ext == -1000) ext++;
         return (q == 1 ? "N" : "S") + String.format("%03d.", deg * q) + String.format("%02d.", min * q) + String.format("%02d.", sec * q) + String.format("%03d", ext * q);
     }
 
@@ -30,7 +31,8 @@ public class MapToSector
         int min = (int) ((d - deg) * 60);
         int sec = (int) (((d - deg) * 60 - min) * 60);
         int ext = (int) Math.floor((((((d - deg) * 60 - min) * 60) - sec) * 1000));
-        if(ext == 1000) ext--; else if(ext == -1000) ext++;
+        if (ext == 1000) ext--;
+        else if (ext == -1000) ext++;
         return (q == 1 ? "E" : "W") + String.format("%03d.", deg * q) + String.format("%02d.", min * q) + String.format("%02d.", sec * q) + String.format("%03d", ext * q);
     }
 
@@ -53,16 +55,16 @@ public class MapToSector
             return "0 0";
         }
 
-        if (lines.size() >= 2)
-            if (lines.get(1).contains("LongName") && lines.get(1).split("LongName=\"").length > 1)
-                name = lines.get(1).split("LongName=\"")[1].split("\"")[0];
+        if (lines.size() >= 2 && lines.get(1).contains("LongName") && lines.get(1).split("LongName=\"").length > 1)
+            name = lines.get(1).split("LongName=\"")[1].split("\"")[0];
+
         try
         {
             PrintWriter out = new PrintWriter(new FileWriter(fileOut + File.separator + name + ".sct2"));
             final String SPACE = "                          ";
 
             if (name.length() > SPACE.length() - 1) name = name.substring(0, SPACE.length() - 1);
-            out.print(name + SPACE.substring(name.length()) + "N000.00.00.000 W000.00.00.000 E000.00.00.000 W000.00.00.000");
+            out.print(name + SPACE.substring(name.length()) + "N000.00.00.000 E000.00.00.000 N000.00.00.000 E000.00.00.000");
             for (String s : lines)
             {
                 String aa = "";
