@@ -39,7 +39,6 @@ public class MapToSector
     public String convert(File fileIn, File fileOut)
     {
         long z = System.currentTimeMillis();
-        String name = "Sector Output";
         try
         {
             BufferedReader in = new BufferedReader(new FileReader(fileIn));
@@ -55,8 +54,11 @@ public class MapToSector
             return "0 0";
         }
 
+        String name;
         if (lines.size() >= 2 && lines.get(1).contains("LongName") && lines.get(1).split("LongName=\"").length > 1)
             name = lines.get(1).split("LongName=\"")[1].split("\"")[0];
+        else
+            name = fileIn.getName().replace(".xml", "");
 
         try
         {

@@ -9,7 +9,7 @@
       <maximumSize width="550" height="90"/>
       <minimumSize width="550" height="90"/>
       <preferredSize width="550" height="90"/>
-      <toolTipText value="&lt;html&gt;&#10;&lt;p&gt;&lt;b&gt;Video Map To Sector File&lt;/b&gt; by &lt;i&gt;Josh Glottmann&lt;/i&gt;.&lt;/p&gt;&#10;&lt;p&gt;Converts XML Video Maps to a .sct2 file format.&lt;/p&gt;&#10;&lt;p&gt;Version 1.1 | November 11, 2015&lt;/p&gt;&#10;&lt;/html&gt;"/>
+      <toolTipText value="&lt;html&gt;&#10;&lt;p&gt;&lt;b&gt;Video Map To Sector File&lt;/b&gt; by &lt;i&gt;Josh Glottmann&lt;/i&gt;.&lt;/p&gt;&#10;&lt;p&gt;Converts XML Video Maps to a .sct2 file format.&lt;/p&gt;&#10;&lt;p&gt;Version 1.11 | November 12, 2015&lt;/p&gt;&#10;&lt;/html&gt;"/>
     </properties>
     <border type="none"/>
     <children>
