@@ -1,4 +1,4 @@
-package io.github.jhg0.VideoMapToSector;
+package io.github.glott.VideoMapToSector;
 
 import java.io.BufferedReader;
 import java.io.File;

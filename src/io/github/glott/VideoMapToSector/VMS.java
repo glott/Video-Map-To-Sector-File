@@ -1,4 +1,4 @@
-package io.github.jhg0.VideoMapToSector;
+package io.github.glott.VideoMapToSector;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
